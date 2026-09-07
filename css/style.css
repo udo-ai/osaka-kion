@@ -1,0 +1,208 @@
+/* ==== 大阪市の気温グラフ ==== */
+
+:root {
+  color-scheme: light dark;
+  /* ライトモードの配色 */
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --border: rgba(11, 11, 11, 0.10);
+  --accent: #2a78d6;
+  --series-max: #e34948; /* 最高気温 */
+  --series-min: #2a78d6; /* 最低気温 */
+  --series-nmax: rgba(227, 73, 72, 0.5);  /* 最高気温の平年値（破線） */
+  --series-nmin: rgba(42, 120, 214, 0.5); /* 最低気温の平年値（破線） */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --border: rgba(255, 255, 255, 0.10);
+    --accent: #3987e5;
+    --series-max: #e66767;
+    --series-min: #3987e5;
+    --series-nmax: rgba(230, 103, 103, 0.55);
+    --series-nmin: rgba(57, 135, 229, 0.55);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  line-height: 1.7;
+}
+
+.site-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 16px 4px;
+}
+
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+.lead { color: var(--ink-2); margin: 0; font-size: 0.95rem; }
+
+/* --- 一言比較ボックス --- */
+.today-box {
+  max-width: 1100px;
+  margin: 14px auto 0;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  font-size: 0.95rem;
+}
+.today-box .today-date { font-weight: 600; }
+.today-box .today-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 広告枠（中身が空のときは表示しない） --- */
+.ad-slot {
+  max-width: 1100px;
+  margin: 16px auto;
+  padding: 0 16px;
+  text-align: center;
+}
+.ad-slot:empty { display: none; }
+
+/* --- 年タブ --- */
+.year-tabs {
+  max-width: 1100px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.year-tabs button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-2);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.year-tabs button:hover { color: var(--ink); }
+.year-tabs button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* --- 凡例 --- */
+.chart-legend {
+  max-width: 1100px;
+  margin: 14px auto 0;
+  padding: 0 16px;
+  display: flex;
+  gap: 18px;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+.chart-legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.swatch {
+  display: inline-block;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+.swatch-max { background: var(--series-max); }
+.swatch-min { background: var(--series-min); }
+.swatch-nmax { background: var(--series-nmax); }
+.swatch-nmin { background: var(--series-nmin); }
+.swatch-dash {
+  /* 破線の凡例マーク */
+  background: none;
+  border-top: 2px dashed;
+  height: 0;
+}
+.swatch-dash.swatch-nmax { border-color: var(--series-nmax); }
+.swatch-dash.swatch-nmin { border-color: var(--series-nmin); }
+
+/* --- グラフ --- */
+main { max-width: 1100px; margin: 0 auto; padding: 0 16px 32px; }
+
+.year-heading { font-size: 1.15rem; margin: 18px 0 6px; }
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.chart-card {
+  min-width: 0; /* グリッド内でカードが縮めるようにする */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px 6px;
+}
+.chart-card h3 {
+  margin: 0 0 2px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.chart-card .canvas-wrap { position: relative; height: 200px; }
+
+@media (max-width: 900px) {
+  .chart-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .chart-grid { grid-template-columns: 1fr; }
+  .chart-card .canvas-wrap { height: 220px; }
+}
+
+/* --- まとめ表 --- */
+.summary { margin-top: 30px; }
+.summary h2 { font-size: 1.1rem; }
+.table-wrap { overflow-x: auto; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+th, td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--grid);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+th { color: var(--ink-2); font-weight: 600; }
+th[scope="col"]:first-child, td:first-child { text-align: left; }
+
+/* --- フッター --- */
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  border-top: 1px solid var(--grid);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.site-footer a { color: var(--ink-2); }
+.credit { margin-top: 10px; }

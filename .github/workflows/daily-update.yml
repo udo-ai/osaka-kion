@@ -1,0 +1,53 @@
+name: 毎日更新
+
+on:
+  schedule:
+    # 毎日 10:30 JST（01:30 UTC）。気象庁の前日データ反映後に実行
+    - cron: "30 1 * * *"
+  workflow_dispatch: # 手動実行も可能
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 気象庁データを取得して一言比較を生成
+        run: |
+          YEAR=$(TZ=Asia/Tokyo date +%Y)
+          python scripts/fetch_jma.py "$YEAR"
+          # 1月中は前年12月の確定値も取り込む
+          if [ "$(TZ=Asia/Tokyo date +%m)" = "01" ]; then
+            python scripts/fetch_jma.py "$((YEAR-1))"
+          fi
+          python scripts/build_data_js.py
+          python scripts/make_today.py
+
+      - name: 変更をコミットしてプッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "変更なし"
+          else
+            git commit -m "毎日更新: $(TZ=Asia/Tokyo date +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Xに投稿（APIキー設定時のみ）
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        run: |
+          pip install --quiet tweepy
+          python scripts/post_x.py

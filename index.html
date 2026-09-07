@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大阪市の気温グラフ｜9月6日の最高気温は平年比-3.3℃（低め）</title>
+<meta name="description" content="9月6日の大阪：最高 28.1℃（平年比 -3.3℃）・最低 23.9℃（平年比 +0.3℃）。大阪市の過去10年（2016年〜）の最高気温・最低気温を、平年値（1991〜2020年平均）と重ねた月ごとの折れ線グラフで毎日更新しています。出典：気象庁ホームページ。">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>大阪市の気温グラフ</h1>
+  <p class="lead">大阪市の気温を、平年値と重ねた月ごとのグラフでふりかえることができます（毎日更新）。</p>
+</header>
+
+<div class="today-box" id="todayBox" hidden></div>
+
+<!-- 広告枠（上部）：広告タグをこのdivの中に貼り付けてください -->
+<div class="ad-slot" id="ad-top"></div>
+
+<nav class="year-tabs" id="yearTabs" aria-label="年の選択"></nav>
+
+<div class="chart-legend" aria-hidden="true">
+  <span class="key"><i class="swatch swatch-max"></i>最高気温</span>
+  <span class="key"><i class="swatch swatch-min"></i>最低気温</span>
+  <span class="key"><i class="swatch swatch-dash swatch-nmax"></i>最高気温の平年値</span>
+  <span class="key"><i class="swatch swatch-dash swatch-nmin"></i>最低気温の平年値</span>
+</div>
+
+<main>
+  <h2 class="year-heading" id="yearHeading"></h2>
+  <section class="chart-grid" id="chartGrid"></section>
+
+  <section class="summary">
+    <h2 id="summaryHeading">月ごとのまとめ（表）</h2>
+    <div class="table-wrap">
+      <table id="summaryTable" aria-labelledby="summaryHeading">
+        <thead>
+          <tr>
+            <th scope="col">月</th>
+            <th scope="col">平均最高気温</th>
+            <th scope="col">平均最低気温</th>
+            <th scope="col">月間最高</th>
+            <th scope="col">月間最低</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- 広告枠（下部）：広告タグをこのdivの中に貼り付けてください -->
+<div class="ad-slot" id="ad-bottom"></div>
+
+<footer class="site-footer">
+  <p>出典：<a href="https://www.data.jma.go.jp/obd/stats/etrn/index.php" target="_blank" rel="noopener">気象庁ホームページ「過去の気象データ検索」</a>（大阪）のデータを加工して作成しています。</p>
+  <p>平年値は1991〜2020年の30年間の平均値です。掲載している値は観測値をそのまま表示したものです。正確な情報は気象庁サイトでご確認ください。</p>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/today.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
