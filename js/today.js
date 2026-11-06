@@ -1,2 +1,2 @@
 // 自動生成ファイル（scripts/make_today.py）
-window.KION_TODAY = {"date": "2026-11-04", "label": "11月4日", "weekday": "水", "tmax": 21.1, "tmin": 13.7, "dmax": 0.9, "dmin": 1.4, "headline": "11月4日の大阪：最高 21.1℃（平年比 +0.9℃）・最低 13.7℃（平年比 +1.4℃）"};
+window.KION_TODAY = {"date": "2026-11-05", "label": "11月5日", "weekday": "木", "tmax": 23.8, "tmin": 16.4, "dmax": 3.8, "dmin": 4.2, "headline": "11月5日の大阪：最高 23.8℃（平年比 +3.8℃）・最低 16.4℃（平年比 +4.2℃）"};
